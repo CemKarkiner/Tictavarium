@@ -19,7 +19,7 @@
 
 ## Application side
 ### Backend
-- Application needs to contain S&Ps
+- Application needs to contain S&Ps (songs and practices)
 - Database will hold the data of the S&Ps
 - The song needs to start from its original BPM as a default but user should be able to change
 - The software needs to identify the new tabs using OpenCV (if there is a better approach this can be change)
