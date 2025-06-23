@@ -34,4 +34,13 @@
 - User can search the songs from an upper search bar
 - User can set the metronome from upper left corner 
 
-
+## Tech Stack
+| Component  | Choice |
+| ------------- | ------------- |
+| Database  | MongoDB  |
+| Backend  | FastAPI  |
+| Frontend  | Vue  |
+| File Storage  | S3 |
+| Monitoring  | Prometheus + Grafana  |
+| Deployment  | Docker + Docker Compose / Kubernetes |
+| Hosting  | EC2  |
