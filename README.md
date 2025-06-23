@@ -8,20 +8,20 @@
 - Possible Cloud Technologies (AWS)
 - Deployment (Docker, Kubernet, Prometeus etc.)
 - Note correction while playing (Optional)
-- ER diagram and flaw chart needs to be drawn
+- ER diagram and flow chart needs to be drawn
 
 ## Music Side
 - Primary focus is guitar
-- User can sat the metronome settings
-- User can slow down the music metroneme
+- User can set the metronome settings
+- User can slow down the music metronome
 - Guitar sound frequences should be implemented (24 frets)
-- 1/2 notes, 1/4 notes etc. (mandotory)
+- 1/2 notes, 1/4 notes etc. (mandatory)
 
 ## Application side
 ### Backend
 - Application needs to contain S&Ps
 - Database will hold the data of the S&Ps
-- The song needs to start from its originial BPM as a default but user should be able to change
+- The song needs to start from its original BPM as a default but user should be able to change
 - The software needs to identify the new tabs using OpenCV (if there is a better approach this can be change)
 - Offline and online mods should be provided (optional)
 - The S&Ps should have backtrackings (optional)
