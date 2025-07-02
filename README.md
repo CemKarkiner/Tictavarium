@@ -1,5 +1,5 @@
 # An application for musicians to practice
-## Do List
+## Do List (In order)
 - Metronome (Done)
 - Reading tabs and converting into data
 - Tab-metronome integration
@@ -19,10 +19,11 @@
 
 ## Application side
 ### Backend
+- All project will be developin python (subprocess cn change)
 - Application needs to contain S&Ps (songs and practices)
 - Database will hold the data of the S&Ps
 - The song needs to start from its original BPM as a default but user should be able to change
-- The software needs to identify the new tabs using OpenCV (if there is a better approach this can be change)
+- The software needs to identify the new tabs using audiveris subprocess
 - Offline and online mods should be provided (optional)
 - The S&Ps should have backtrackings (optional)
 
