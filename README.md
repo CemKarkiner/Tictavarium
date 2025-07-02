@@ -1,7 +1,7 @@
 # An application for musicians to practice
 ## Do List
 - Metronome (Done)
-- Tabs
+- Reading tabs and converting into data
 - Tab-metronome integration
 - Good interface
 - Database (SQL or NoSQL)
