@@ -19,7 +19,7 @@
 
 ## Application side
 ### Backend
-- All project will be developin python (subprocess cn change)
+- All project will be develop in python (subprocess can change)
 - Application needs to contain S&Ps (songs and practices)
 - Database will hold the data of the S&Ps
 - The song needs to start from its original BPM as a default but user should be able to change
