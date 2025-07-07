@@ -25,7 +25,7 @@
 - The song needs to start from its original BPM as a default but user should be able to change
 - The software needs to identify the new tabs using audiveris subprocess
 - Offline and online mods should be provided (optional)
-- The S&Ps should have backtrackings (optional)
+- The S&Ps should have backtrackings that stored in S3 (optional)
 
 ### Frontend
 - Application needs to have a administor interface that uploads new S&Ps via PDF
