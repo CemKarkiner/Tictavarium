@@ -1,7 +1,7 @@
 # An application for musicians to practice
 ## Do List (In order)
 - Metronome (Done)
-- Reading tabs and converting into data
+- Reading tabs and converting into JSON data (Audiveris-gradle)
 - Tab-metronome integration
 - Good interface
 - Database (SQL or NoSQL)
