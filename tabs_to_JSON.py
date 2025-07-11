@@ -1,11 +1,12 @@
 import os
 import subprocess
 import xml.etree.ElementTree as ET
-import json
 import zipfile
 import glob
 import tkinter as tk
 from tkinter import filedialog, messagebox
+import re
+import json
 import shutil
 
 audiveris_jar = r"C:\Users\ASUS\audiveris\app\build\libs\audiveris-all-5.6.1-all.jar"
@@ -115,6 +116,7 @@ def parse_musicxml_to_json(musicxml_path):
 
 if __name__ == "__main__":
     pdf_path = ask_user_inputs()
+    pdf_name = os.path.basename(pdf_path)
     project_dir = os.getcwd()
     output_dir = os.path.join(project_dir, "audiveris_output")
 
@@ -147,14 +149,44 @@ if __name__ == "__main__":
 
     # 6. XML → JSON
     json_data = parse_musicxml_to_json(xml_path)
+    pdf_name = os.path.basename(pdf_path)
+    pdf_name = re.sub(r"\.pdf$", "", pdf_name, flags=re.IGNORECASE)
+    for doc in json_data:
+        doc["source_pdf"] = pdf_name
+
     json_path = os.path.join(project_dir, "output.json")
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(json_data, f, ensure_ascii=False, indent=2)
-
-    print(f"JSON written to: {json_path}")
 
     # 7. Geçici klasörü sil
     try:
         shutil.rmtree(output_dir)
     except Exception as e:
         print(e)
+
+    # 8. JSON → MongoDB
+    try:
+        from pymongo import MongoClient
+
+        client = MongoClient("mongodb://localhost:27017/")
+        db = client["tictavarium"]
+        collection = db["sheets"]
+
+        # Önceki verileri sil
+        collection.delete_many({})
+
+        # Yeni verileri ekle
+        if isinstance(json_data, list):
+            collection.insert_many(json_data)
+        else:
+            collection.insert_one(json_data)
+
+        print(f"MongoDB'ye {len(json_data)} belge yüklendi.")
+
+        # JSON dosyasını sil
+        if os.path.exists(json_path):
+            os.remove(json_path)
+            print(f"{json_path} dosyası başarıyla silindi.")
+    except Exception as e:
+        print("MongoDB yükleme hatası:", e)
+
