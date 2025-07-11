@@ -5,12 +5,12 @@ import json
 import zipfile
 import glob
 
-# === Ayarlar ===
 INPUT_PDF = r"C:\Users\ASUS\Downloads\GuitarLick.pdf"
-PROJECT_DIR = os.path.abspath(os.getcwd())  # Mevcut proje klasörü
+PROJECT_DIR = os.path.abspath(os.getcwd())
 OUTPUT_DIR = os.path.join(PROJECT_DIR, "audiveris_output")
 AUDIVERIS_JAR = r"C:\Users\ASUS\audiveris\app\build\libs\audiveris-all-5.6.1-all.jar"
 JAVA_21_PATH = r"C:\Program Files\Java\jdk-21\bin\java.exe"
+MUSICXML_PATH = r"C:\Users\ASUS\audiveris\output\extracted_mxl\GuitarLick.xml"
 
 
 def run_omr_batch(pdf_path, output_dir):
@@ -77,29 +77,39 @@ def parse_musicxml_to_json(musicxml_path):
     tree = ET.parse(musicxml_path)
     root = tree.getroot()
 
-    ns = {'ns': 'http://www.musicxml.org/ns/musicxml'}
+    ns = {'': root.tag.split('}')[0].strip('{')} if '}' in root.tag else {}
 
     data = []
-    for measure in root.findall(".//ns:measure", ns):
-        measure_data = {"measure": measure.attrib.get("number", "0"), "notes": []}
-        for note in measure.findall("ns:note", ns):
-            pitch = note.find("ns:pitch", ns)
-            duration = note.find("ns:duration", ns)
-            if pitch is not None:
-                step = pitch.find("ns:step", ns).text
-                octave = pitch.find("ns:octave", ns).text
-                note_name = f"{step}{octave}"
-                measure_data["notes"].append({
-                    "note": note_name,
-                    "duration": duration.text if duration is not None else "unknown"
-                })
-            elif note.find("ns:rest", ns) is not None:
-                measure_data["notes"].append({
-                    "note": "rest",
-                    "duration": duration.text if duration is not None else "unknown"
-                })
-        data.append(measure_data)
+
+    for part in root.findall("part", ns):
+        part_id = part.attrib.get("id", "unknown")
+        for measure in part.findall("measure", ns):
+            measure_data = {
+                "part": part_id,
+                "measure": measure.attrib.get("number", "0"),
+                "notes": []
+            }
+            for note in measure.findall("note", ns):
+                note_info = {}
+                pitch = note.find("pitch", ns)
+                duration = note.find("duration", ns)
+
+                if pitch is not None:
+                    step = pitch.find("step", ns)
+                    octave = pitch.find("octave", ns)
+                    note_info["note"] = f"{step.text}{octave.text}" if step is not None and octave is not None else "unknown"
+                elif note.find("rest", ns) is not None:
+                    note_info["note"] = "rest"
+                else:
+                    note_info["note"] = "unknown"
+
+                note_info["duration"] = duration.text if duration is not None else "unknown"
+                measure_data["notes"].append(note_info)
+
+            data.append(measure_data)
+
     return data
+
 
 
 if __name__ == "__main__":
@@ -137,5 +147,3 @@ if __name__ == "__main__":
         json.dump(json_data, f, ensure_ascii=False, indent=4)
 
     print(f"JSON çıktı dosyası oluşturuldu: {json_output_path}")
-    for measure in json_data:
-        print(measure)
