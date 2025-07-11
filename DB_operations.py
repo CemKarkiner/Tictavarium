@@ -11,22 +11,19 @@ def connect_to_mongo(uri="mongodb://localhost:27017/", db_name="tictavarium", co
     return db[collection_name]
 
 def insert_documents(json_data, collection, source_pdf):
-    # Kaynak adını ve timestamp'i her belgeye ekle
-    timestamp = datetime.utcnow()
-    for doc in json_data:
-        doc["source_pdf"] = source_pdf
-        doc["created_at"] = timestamp
-
-    # Önceki verileri sil (aynı kaynaktan gelenler)
-    collection.delete_many({"source_pdf": source_pdf})
-
-    # Yeni verileri ekle
-    if isinstance(json_data, list):
+    try:
+        timestamp = datetime.utcnow()
+        if isinstance(json_data, dict):
+            json_data = [json_data]
+        for doc in json_data:
+            doc["source_pdf"] = source_pdf
+            doc["created_at"] = timestamp
+        collection.delete_many({"source_pdf": source_pdf})
         collection.insert_many(json_data)
-    else:
-        collection.insert_one(json_data)
-
-    return len(json_data)
+        return len(json_data)
+    except Exception as e:
+        print("DB insert error:", e)
+        return 0
 
 def load_json_file(json_path):
     with open(json_path, "r", encoding="utf-8") as f:
