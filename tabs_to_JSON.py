@@ -8,6 +8,8 @@ from tkinter import filedialog, messagebox
 import re
 import json
 import shutil
+from DB_operations import connect_to_mongo, insert_documents, cleanup_file
+
 
 audiveris_jar = r"C:\Users\ASUS\audiveris\app\build\libs\audiveris-all-5.6.1-all.jar"
 java_path = r"C:\Program Files\Java\jdk-21\bin\java.exe"
@@ -166,27 +168,12 @@ if __name__ == "__main__":
 
     # 8. JSON → MongoDB
     try:
-        from pymongo import MongoClient
-
-        client = MongoClient("mongodb://localhost:27017/")
-        db = client["tictavarium"]
-        collection = db["sheets"]
-
-        # Önceki verileri sil
-        collection.delete_many({})
-
-        # Yeni verileri ekle
-        if isinstance(json_data, list):
-            collection.insert_many(json_data)
-        else:
-            collection.insert_one(json_data)
-
-        print(f"MongoDB'ye {len(json_data)} belge yüklendi.")
+        collection = connect_to_mongo()
+        count = insert_documents(json_data, collection, pdf_name)
+        print(f"MongoDB'ye {count} belge yüklendi.")
 
         # JSON dosyasını sil
-        if os.path.exists(json_path):
-            os.remove(json_path)
-            print(f"{json_path} dosyası başarıyla silindi.")
+        cleanup_file(json_path)
+
     except Exception as e:
         print("MongoDB yükleme hatası:", e)
-
