@@ -63,7 +63,6 @@ def convert_notes_to_tab(notes_data):
         try:
             midi = note_name_to_midi(note_name)
             string, fret = midi_to_string_and_fret(midi)
-            print(string,fret)
         except ValueError as e:
             print(f"Hatalı nota atlandı: {note_name} ({e})")
             for s in tab_output:
