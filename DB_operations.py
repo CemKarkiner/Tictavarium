@@ -36,3 +36,16 @@ def cleanup_file(path):
             print(f"{path} dosyası silindi.")
     except Exception as e:
         print("Dosya silme hatası:", e)
+
+def get_all_notes_by_pdf(source_pdf, collection):
+    try:
+        docs = collection.find({"source_pdf": source_pdf}).sort([
+            ("part", 1), ("measure", 1)
+        ])
+        all_notes = []
+        for doc in docs:
+            all_notes.extend(doc.get("notes", []))
+        return all_notes
+    except Exception as e:
+        print("DB'den nota çekme hatası:", e)
+        return []
