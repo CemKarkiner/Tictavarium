@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 
@@ -10,14 +10,7 @@ export const MainPage = (): JSX.Element => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Navigate to practice page with the song name
       navigate(`/practice/${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearchSubmit(e as any);
     }
   };
 
@@ -28,7 +21,7 @@ export const MainPage = (): JSX.Element => {
         {/* Top Navigation */}
         <div className="flex justify-center items-center px-6 pt-6 gap-6 flex-wrap">
 
-          {/* Devices (icon above) */}
+          {/* Devices */}
           <div className="relative flex flex-col items-center">
             <img
               src="/guitar.png"
@@ -52,7 +45,7 @@ export const MainPage = (): JSX.Element => {
             </Button>
           </div>
 
-          {/* About Us (icon above, aynalanmış) */}
+          {/* About Us */}
           <div className="relative flex flex-col items-center">
             <img
               src="/CatWithBall.png"
@@ -100,7 +93,6 @@ export const MainPage = (): JSX.Element => {
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleKeyPress}
               className="w-[295px] h-[47px] bg-[#fadeb2] rounded-xl border border-[#f26565] px-3 font-['Inter',Helvetica] font-normal italic text-black text-[11px] placeholder:text-black/70 focus:outline-none focus:ring-2 focus:ring-[#f26565] focus:border-transparent"
               placeholder="Enter any S&P..."
             />

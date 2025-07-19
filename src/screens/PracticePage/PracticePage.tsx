@@ -22,26 +22,45 @@ export const PracticePage = (): JSX.Element => {
   const [bpmInput, setBpmInput] = useState(bpm.toString());
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(1);
+  const [currentMeasure, setCurrentMeasure] = useState(1);
+
   const [songName] = useState(urlSongName ? decodeURIComponent(urlSongName) : "Song Name");
   const [artist] = useState("From");
-  const [currentMeasure, setCurrentMeasure] = useState(1);
+
+  const [musicData, setMusicData] = useState<MeasureData[]>([]);
+  const [tabData, setTabData] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const intervalRef = useRef<number | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const measureIncrementedRef = useRef(false); // Track if measure was already incremented
+  const measureIncrementedRef = useRef(false);
 
-  const [musicData, setMusicData] = useState<MeasureData[]>([]);
+  // ✅ Fetch Notes and Tab from Backend
+  const API_BASE = "http://localhost:8000";
 
   useEffect(() => {
-    fetch(`/api/notes?song=${encodeURIComponent(songName)}`)
-      .then((res) => res.json())
-      .then((data) => setMusicData(data))
-      .catch((err) => {
-        console.error("Failed to fetch notes:", err);
-        setMusicData([]);
-      });
+    const fetchNotesAndTab = async () => {
+      try {
+        const notesRes = await fetch(`${API_BASE}/api/notes?song=${encodeURIComponent(songName)}`);
+        if (!notesRes.ok) throw new Error(`Failed to fetch notes: ${notesRes.status}`);
+        const notesJson = await notesRes.json();
+        setMusicData(notesJson);
+
+        const tabRes = await fetch(`${API_BASE}/api/tab?song=${encodeURIComponent(songName)}`);
+        if (!tabRes.ok) throw new Error(`Failed to fetch tab: ${tabRes.status}`);
+        const tabJson = await tabRes.json();
+        setTabData(tabJson.tab || "No tablature available.");
+      } catch (err: any) {
+        console.error(err);
+        setErrorMsg(err.message || "Something went wrong while fetching data.");
+      }
+    };
+
+    fetchNotesAndTab();
   }, [songName]);
 
+
+  // ✅ Create Metronome Beep
   const createBeep = (frequency: number, duration: number) => {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -75,14 +94,14 @@ export const PracticePage = (): JSX.Element => {
       intervalRef.current = null;
     }
     setCurrentBeat(1);
-    measureIncrementedRef.current = false; // Reset measure increment tracker
+    measureIncrementedRef.current = false;
   };
 
   const resetPractice = () => {
     stopMetronome();
     setCurrentMeasure(1);
     setCurrentBeat(1);
-    measureIncrementedRef.current = false; // Reset measure increment tracker
+    measureIncrementedRef.current = false;
   };
 
   const handleBackToHome = () => {
@@ -113,6 +132,7 @@ export const PracticePage = (): JSX.Element => {
     }
   };
 
+  // ✅ Metronome Interval
   useEffect(() => {
     if (isPlaying) {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -124,17 +144,13 @@ export const PracticePage = (): JSX.Element => {
           const frequency = nextBeat === 1 ? 1200 : 800;
           createBeep(frequency, 0.1);
 
-          // Only increment measure when going from beat 4 to beat 1, and only once
           if (nextBeat === 1 && prevBeat === 4 && !measureIncrementedRef.current) {
             setCurrentMeasure((prevMeasure) => prevMeasure + 1);
             measureIncrementedRef.current = true;
           }
-          
-          // Reset the increment flag when we're not on beat 1
           if (nextBeat !== 1) {
             measureIncrementedRef.current = false;
           }
-          
           return nextBeat;
         });
       }, interval);
@@ -153,6 +169,13 @@ export const PracticePage = (): JSX.Element => {
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-[#f9eded] to-[#faf0e6] p-4">
       <div className="max-w-7xl mx-auto">
+        {/* Error Alert */}
+        {errorMsg && (
+          <div className="bg-red-100 text-red-800 p-4 mb-4 rounded-lg">
+            ⚠ {errorMsg}
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex items-center justify-center mb-8">
           <Button
@@ -171,14 +194,11 @@ export const PracticePage = (): JSX.Element => {
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Left Sidebar - Metronome */}
+          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
               <div className="flex flex-col items-center mb-6">
-                <div className="relative">
-                  <img src="/metronome.png" alt="Metronome" className="w-20 h-20 mb-4" />
-                </div>
-
+                <img src="/metronome.png" alt="Metronome" className="w-20 h-20 mb-4" />
                 <div className="text-center">
                   <div className="text-3xl font-bold text-gray-800 mb-1">{bpm}</div>
                   <div className="text-sm text-gray-600 font-medium">BPM</div>
@@ -237,15 +257,15 @@ export const PracticePage = (): JSX.Element => {
 
           {/* Main Content Area */}
           <div className="lg:col-span-3">
-            {/* Song Information */}
+            {/* Song Info */}
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 mb-6 shadow-lg border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex-1">
                   <div className="text-2xl font-bold bg-[#fadeb2]/50 border-2 border-[#f26565]/30 rounded-lg mb-2 px-3 py-1 select-none">
-                    Guitar Lick
+                    {songName}
                   </div>
                   <div className="text-lg bg-[#fadeb2]/30 border border-[#f26565]/20 rounded-lg px-3 py-1 select-none">
-                    From
+                    {artist}
                   </div>
                 </div>
 
@@ -256,41 +276,12 @@ export const PracticePage = (): JSX.Element => {
               </div>
             </div>
 
-            {/* Music Notation Area */}
+            {/* Tab Display */}
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
-              <div className="mb-6">
-                <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-                  <span>Measure {currentMeasure}</span>
-                  <span>Beat {currentBeat}/4</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-gradient-to-r from-[#f26565] to-[#fadeb2] h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${(currentBeat / 4) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-8 border-2 border-gray-200 min-h-[400px] relative overflow-hidden">
-                <div className="absolute inset-0 p-8 pointer-events-none">
-                  <div className="text-center text-gray-400 mt-32">
-                    <p className="text-lg font-medium">Musical notation will be displayed here</p>
-                    <p className="text-sm mt-2">Upload a song to see the sheet music and tablature</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-center space-x-4 mt-6">
-                <Button className="bg-[#fadeb2] hover:bg-[#f8d49e] text-black px-6 py-2 rounded-lg font-medium">
-                  Previous Measure
-                </Button>
-                <Button className="bg-[#fadeb2] hover:bg-[#f8d49e] text-black px-6 py-2 rounded-lg font-medium">
-                  Loop Current
-                </Button>
-                <Button className="bg-[#fadeb2] hover:bg-[#f8d49e] text-black px-6 py-2 rounded-lg font-medium">
-                  Next Measure
-                </Button>
-              </div>
+              <h2 className="text-xl font-bold mb-4">Tablature:</h2>
+              <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                {tabData || "Loading tablature..."}
+              </pre>
             </div>
           </div>
         </div>

@@ -4,6 +4,6 @@ import App from "./App";
 
 createRoot(document.getElementById("app") as HTMLElement).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <App /> 
+  </StrictMode>
 );
