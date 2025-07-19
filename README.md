@@ -13,15 +13,16 @@
 - ER diagram and flow chart needs to be drawn
 ## Music Side
 - Primary focus is guitar
-- User can set the metronome settings
-- User can slow down the music metronome
+- User can set the metronome settings (Done)
+- Music measure needs to be change automaticly (3/4, 4/4 etc.)
+- User can slow down the music metronome (Done)
 - Guitar sound frequences should be implemented (24 frets)
 - 1/2 notes, 1/4 notes etc. (mandatory)
 ## Application side
 ### Backend
-- All project will be develop in python (subprocess can change)
+- All project will be develop in python (subproceses can change)
 - Application needs to contain S&Ps (songs and practices)
-- Database will hold the data of the S&Ps
+- Database will hold the data of the S&Ps (will improve)
 - The song needs to start from its original BPM as a default but user should be able to change
 - The software needs to identify the new tabs using audiveris subprocess
 - Offline and online mods should be provided (optional)
@@ -31,8 +32,8 @@
 - Music tabs and notes should be shown
 - There needs to be a bar to show user where they are
 - Tabs, notes and bar should work in synchronized
-- User can search the songs from an upper search bar
-- User can set the metronome from upper left corner
+- User can search the songs from an upper search bar (DONE)
+- User can set the metronome from upper left corner (DONE)
 ### Tech Stack
 | Component  | Choice |
 | ------------- | ------------- |
