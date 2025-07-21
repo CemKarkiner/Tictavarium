@@ -16,7 +16,7 @@
 - User can set the metronome settings (Done)
 - Music measure needs to be change automaticly (3/4, 4/4 etc.)
 - User can slow down the music metronome (Done)
-- Guitar sound frequences should be implemented (24 frets)
+- Guitar sound frequences should be implemented (24 frets) (Done)
 - 1/2 notes, 1/4 notes etc. (mandatory)
 ## Application side
 ### Backend
@@ -30,7 +30,7 @@
 ### Frontend
 - Application needs to have a administor interface that uploads new S&Ps via PDF
 - Music tabs and notes should be shown
-- There needs to be a bar to show user where they are
+- There needs to be a bar to show user where they are (Done but need to be better)
 - Tabs, notes and bar should work in synchronized
 - User can search the songs from an upper search bar (DONE)
 - User can set the metronome from upper left corner (DONE)
