@@ -1,4 +1,4 @@
-# An application for musicians to practice
+# An application for guitarist to practice
 
 ## Do List (In order)
 - Metronome (DONE)
