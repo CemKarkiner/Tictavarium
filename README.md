@@ -1,6 +1,6 @@
 # An application for guitarist to practice
 
-## Do List (In order)
+## To Do List
 - Metronome (DONE)
 - Database (SQL or NoSQL)(DONE)
 - Interface Design (Figma)
@@ -25,8 +25,8 @@
 - Database will hold the data of the S&Ps (will improve)
 - The song needs to start from its original BPM as a default but user should be able to change
 - The software needs to identify the new tabs using audiveris subprocess 
-- Offline and online mods should be provided (optional)
-- The S&Ps should have backtrackings that stored in S3 (optional)
+- Offline and online mods should be provided 
+- The S&Ps should have backtrackings that stored in S3 
 ### Frontend
 - Application needs to have a administor interface that uploads new S&Ps via PDF
 - Music tabs and notes should be shown
