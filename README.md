@@ -3,18 +3,17 @@
 ## To Do List
 - Metronome (DONE)
 - Database (SQL or NoSQL)(DONE)
-- Interface Design (Figma)
-- Good interface (Bolt)
+- Interface Design (Done)
+- Good interface (continues)
 - Tab-metronome integration
-- Reading tabs via Audiveris to read and convert the data from musicxml to JSON data (Audiveris-gradle) (Audiveris converts PDF to note wrong! We need to find another way)
-- Possible Cloud Technologies (AWS)
+- Reading tabs via Audiveris to read and convert the data from musicxml to JSON data (Audiveris-gradle) (Audiveris converts PDF to note wrong! We need to read from tabs not notes)
 - Deployment (Docker, Kubernet, Prometeus etc.)
 - Note correction while playing (Optional)
-- ER diagram and flow chart needs to be drawn
 ## Music Side
 - Primary focus is guitar
 - User can set the metronome settings (Done)
 - Music measure needs to be change automaticly (3/4, 4/4 etc.)
+- Default metronome should be the original metronome of S&P  
 - User can slow down the music metronome (Done)
 - Guitar sound frequences should be implemented (24 frets) (Done)
 - 1/2 notes, 1/4 notes etc. (mandatory)
@@ -39,7 +38,7 @@
 | ------------- | ------------- |
 | Database   | MongoDB |
 | Backend  | FastAPI |
-| Frontend  | Vue |
+| Frontend  | TypeScript |
 | File Storage  | S3 |
 | Monitoring  | Prometheus + Grafana |
 | Deployment  | Docker + Docker Compose / Kubernetes |
