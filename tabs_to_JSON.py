@@ -11,8 +11,8 @@ import shutil
 from DB_operations import connect_to_mongo, insert_documents, cleanup_file
 
 
-audiveris_jar = r"C:\Users\ASUS\audiveris\app\build\libs\audiveris-all-5.6.1-all.jar"
-java_path = r"C:\Program Files\Java\jdk-21\bin\java.exe"
+audiveris_jar = r"Audiveris.jar file path"
+java_path = r"java.exe file path"
 
 def ask_user_inputs():
     root = tk.Tk()
@@ -35,7 +35,7 @@ def run_omr_batch(pdf_path, output_dir, java_path, audiveris_jar):
     command = [
         java_path,
         "-cp",
-        f"{audiveris_jar};C:\\Users\\ASUS\\audiveris\\lib\\*",
+        "audiveris file path// lib //*",
         "Audiveris",
         "-batch",
         pdf_path,

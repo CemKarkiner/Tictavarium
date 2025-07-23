@@ -7,7 +7,6 @@ import tempfile
 
 app = FastAPI()
 
-# Enable CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # In production, set to ["http://localhost:5173"]
@@ -16,10 +15,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# MongoDB Connection
 collection = connect_to_mongo()
 
-# Fetch notes for a given song (source_pdf)
+
 @app.get("/api/notes", response_model=List[Dict])
 async def get_notes(song: str):
     """
@@ -34,7 +32,6 @@ async def get_notes(song: str):
         raise HTTPException(status_code=500, detail=f"Error fetching notes: {str(e)}")
 
 
-# Upload JSON and insert into MongoDB
 @app.post("/api/upload-json")
 async def upload_json(file: UploadFile, source_pdf: str = Form(...)) -> Dict[str, str]:
     """
@@ -58,7 +55,6 @@ async def upload_json(file: UploadFile, source_pdf: str = Form(...)) -> Dict[str
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 
-# Generate tab for a given song
 @app.get("/api/tab", response_model=Dict[str, str])
 async def get_tab(song: str):
     """
